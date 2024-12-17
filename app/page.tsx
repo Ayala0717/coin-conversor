@@ -11,7 +11,7 @@ export default function Home() {
 
   useEffect(() => {
     // Carga inicial de monedas disponibles
-    fetch(EXCHANGE_RATE_API_URL)
+    fetch(`${EXCHANGE_RATE_API_URL}/USD`)
       .then((response) => response.json())
       .then((data) => setCurrencies(Object.keys(data.rates)))
       .catch((error) => console.error("Error fetching currencies:", error))
@@ -33,10 +33,10 @@ export default function Home() {
       <h1 className="text-2xl font-bold mb-4">Conversor de Monedas</h1>
 
       <div className="flex flex-col gap-4 items-center">
-        <input type="number" className="p-2 border rounded" placeholder="Monto" />
+        <input type="number" className="p-2 border rounded" value={amount} onChange={(e) => setAmount(Number(e.target.value))} placeholder="Monto" />
 
         <div className="flex gap-2">
-          <select className="p-2 border rounded">
+          <select className="p-2 border rounded" value={fromCurrency} onChange={(e) => setFromCurrency(e.target.value)}>
             {currencies.map((currency) => (
               <option key={currency} value={currency}>
                 {currency}
@@ -46,7 +46,7 @@ export default function Home() {
 
           <span className="self-center">➡️</span>
 
-          <select className="p-2 border rounded">
+          <select className="p-2 border rounded" value={toCurrency} onChange={(e) => setToCurrency(e.target.value)}>
             {currencies.map((currency) => (
               <option key={currency} value={currency}>
                 {currency}
@@ -55,7 +55,9 @@ export default function Home() {
           </select>
         </div>
 
-        <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Convertir</button>
+        <button onClick={handleConvert} className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+          Convertir
+        </button>
 
         {result !== null && (
           <p className="text-lg font-semibold">
