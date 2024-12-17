@@ -1,4 +1,5 @@
 "use client"
+import { BoxAlertWarning } from "@/components/box/alerts"
 import { BoxSelect } from "@/components/box/select"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -37,40 +38,43 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gray-100">
-      <h1 className="text-2xl font-bold mb-4">Conversor de Monedas</h1>
+    <>
+      <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gray-100">
+        <BoxAlertWarning title="test" description="test" wrapperClasses="absolute top-1 md:w-96" />
+        <h1 className="text-2xl font-bold mb-4">Conversor de Monedas</h1>
 
-      <div className="flex flex-col gap-4 items-center">
-        <Input type="number" value={amount} onChange={(e) => setAmount(Number(e.target.value))} placeholder="Monto" />
+        <div className="flex flex-col gap-4 items-center">
+          <Input type="number" value={amount} onChange={(e) => setAmount(Number(e.target.value))} placeholder="Monto" />
 
-        <div className="flex gap-2">
-          <BoxSelect
-            placeholder="Selecciona una moneda"
-            selectedOption={fromCurrency}
-            options={currencies}
-            disabled={isEmptyArray(currencies)}
-            handleValueChange={(value) => setFromCurrency(value)}
-          />
+          <div className="flex gap-2">
+            <BoxSelect
+              placeholder="Selecciona una moneda"
+              selectedOption={fromCurrency}
+              options={currencies}
+              disabled={isEmptyArray(currencies)}
+              handleValueChange={(value) => setFromCurrency(value)}
+            />
 
-          <span className="self-center">➡️</span>
+            <span className="self-center">➡️</span>
 
-          <BoxSelect
-            placeholder="Selecciona una moneda"
-            selectedOption={toCurrency}
-            options={currencies}
-            disabled={isEmptyArray(currencies)}
-            handleValueChange={(value) => setToCurrency(value)}
-          />
+            <BoxSelect
+              placeholder="Selecciona una moneda"
+              selectedOption={toCurrency}
+              options={currencies}
+              disabled={isEmptyArray(currencies)}
+              handleValueChange={(value) => setToCurrency(value)}
+            />
+          </div>
+
+          <Button onClick={handleConvert}>Convertir</Button>
+
+          {result !== null && (
+            <p className="text-lg font-semibold">
+              {currentAmmount.current} {fromCurrency} = {result.toFixed(2)} {toCurrency}
+            </p>
+          )}
         </div>
-
-        <Button onClick={handleConvert}>Convertir</Button>
-
-        {result !== null && (
-          <p className="text-lg font-semibold">
-            {currentAmmount.current} {fromCurrency} = {result.toFixed(2)} {toCurrency}
-          </p>
-        )}
       </div>
-    </div>
+    </>
   )
 }
