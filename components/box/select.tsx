@@ -4,13 +4,14 @@ interface Props {
   selectedOption?: string
   options: string[]
   placeholder?: string
+  disabled?: boolean
   handleValueChange?: (value: string) => void
 }
 
 function BoxSelect(props: Props) {
   return (
-    <Select defaultValue={props.selectedOption} onValueChange={props.handleValueChange}>
-      <SelectTrigger>
+    <Select defaultValue={props.selectedOption} onValueChange={props.handleValueChange} disabled={props.disabled}>
+      <SelectTrigger className="w-[80px]">
         <SelectValue placeholder={props.placeholder || "Selecciona una opción"} />
       </SelectTrigger>
       <SelectContent>

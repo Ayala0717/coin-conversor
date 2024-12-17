@@ -3,6 +3,7 @@ import { BoxSelect } from "@/components/box/select"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { EXCHANGE_RATE_API_URL } from "@/constans"
+import { isEmptyArray } from "@/utils/arrays"
 import { useState, useEffect } from "react"
 
 export default function Home() {
@@ -43,6 +44,7 @@ export default function Home() {
             placeholder="Selecciona una moneda"
             selectedOption={fromCurrency}
             options={currencies}
+            disabled={isEmptyArray(currencies)}
             handleValueChange={(value) => setFromCurrency(value)}
           />
 
@@ -52,6 +54,7 @@ export default function Home() {
             placeholder="Selecciona una moneda"
             selectedOption={toCurrency}
             options={currencies}
+            disabled={isEmptyArray(currencies)}
             handleValueChange={(value) => setToCurrency(value)}
           />
         </div>
