@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { EXCHANGE_RATE_API_URL } from "@/constans"
 import { isEmptyArray } from "@/utils/arrays"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 
 export default function Home() {
   const [amount, setAmount] = useState(1) // Monto a convertir
@@ -12,6 +12,8 @@ export default function Home() {
   const [toCurrency, setToCurrency] = useState("EUR")
   const [result, setResult] = useState<number | null>(null)
   const [currencies, setCurrencies] = useState<string[]>([])
+
+  const currentAmmount = useRef(0)
 
   useEffect(() => {
     // Carga inicial de monedas disponibles
@@ -30,6 +32,8 @@ export default function Home() {
         setResult(rate * amount)
       })
       .catch((error) => console.error("Error fetching conversion rate:", error))
+
+    currentAmmount.current = amount
   }
 
   return (
@@ -63,7 +67,7 @@ export default function Home() {
 
         {result !== null && (
           <p className="text-lg font-semibold">
-            {amount} {fromCurrency} = {result.toFixed(2)} {toCurrency}
+            {currentAmmount.current} {fromCurrency} = {result.toFixed(2)} {toCurrency}
           </p>
         )}
       </div>
