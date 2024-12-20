@@ -4,6 +4,7 @@ import { BoxSelect } from "@/components/box/select"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { EXCHANGE_RATE_API_URL } from "@/constans"
+import { useOnlineStatus } from "@/hooks/onlineStatus"
 import { isEmptyArray } from "@/utils/arrays"
 import { useState, useEffect, useRef } from "react"
 
@@ -13,6 +14,7 @@ export default function Home() {
   const [toCurrency, setToCurrency] = useState("EUR")
   const [result, setResult] = useState<number | null>(null)
   const [currencies, setCurrencies] = useState<string[]>([])
+  const isOnline = useOnlineStatus()
 
   const currentAmmount = useRef(0)
 
@@ -40,7 +42,7 @@ export default function Home() {
   return (
     <>
       <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gray-100">
-        <BoxAlertWarning title="test" description="test" wrapperClasses="absolute top-1 md:w-96" />
+        {!isOnline && <BoxAlertWarning title="Sin conexión" description="No se puede conectar a internet" wrapperClasses="absolute top-1 md:w-96" />}
         <h1 className="text-2xl font-bold mb-4">Conversor de Monedas</h1>
 
         <div className="flex flex-col gap-4 items-center">
