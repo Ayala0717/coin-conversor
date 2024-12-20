@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { EXCHANGE_RATE_API_URL } from "@/constans"
 import { useOnlineStatus } from "@/hooks/onlineStatus"
+import { getRates, setRates } from "@/store"
 import { isEmptyArray } from "@/utils/arrays"
 import { useState, useEffect, useRef } from "react"
 
@@ -14,27 +15,35 @@ export default function Home() {
   const [toCurrency, setToCurrency] = useState("EUR")
   const [result, setResult] = useState<number | null>(null)
   const [currencies, setCurrencies] = useState<string[]>([])
-  const isOnline = useOnlineStatus()
-
   const currentAmmount = useRef(0)
+
+  const isOnline = useOnlineStatus()
 
   useEffect(() => {
     // Carga inicial de monedas disponibles
     fetch(`${EXCHANGE_RATE_API_URL}/USD`)
       .then((response) => response.json())
-      .then((data) => setCurrencies(Object.keys(data.rates)))
+      .then((data) => {
+        setCurrencies(Object.keys(data.rates))
+        setRates(data)
+      })
       .catch((error) => console.error("Error fetching currencies:", error))
   }, [])
 
   const handleConvert = () => {
     // Llamada a la API para convertir
-    fetch(`${EXCHANGE_RATE_API_URL}${fromCurrency}`)
-      .then((response) => response.json())
-      .then((data) => {
-        const rate = data.rates[toCurrency]
-        setResult(rate * amount)
-      })
-      .catch((error) => console.error("Error fetching conversion rate:", error))
+    if (isOnline) {
+      fetch(`${EXCHANGE_RATE_API_URL}${fromCurrency}`)
+        .then((response) => response.json())
+        .then((data) => {
+          const rate = data.rates[toCurrency]
+          setResult(rate * amount)
+        })
+        .catch((error) => console.error("Error fetching conversion rate:", error))
+    } else {
+      const rates = JSON.parse(getRates())
+      setResult(rates.rates[toCurrency] * amount)
+    }
 
     currentAmmount.current = amount
   }
